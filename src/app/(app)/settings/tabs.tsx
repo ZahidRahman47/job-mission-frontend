@@ -7,6 +7,7 @@ import { cn } from '@/lib/cn';
 const TABS = [
   { href: '/settings/profile', label: 'Profile' },
   { href: '/settings/preferences', label: 'Job search' },
+  { href: '/settings/capture', label: 'Gmail capture' },
   { href: '/settings/notifications', label: 'Notifications' },
   { href: '/settings/security', label: 'Security' },
   { href: '/settings/data', label: 'Your data' },

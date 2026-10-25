@@ -19,7 +19,7 @@ import { timeAgo } from '@/lib/format';
 import { useAccountMutation, useLogout, useMe, useSessions } from '@/lib/queries';
 import type { ImportReport, User } from '@/lib/types';
 
-function Section({
+export function Section({
   title,
   description,
   children,

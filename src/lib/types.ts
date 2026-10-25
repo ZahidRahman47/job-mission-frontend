@@ -42,3 +42,5 @@ export interface CursorPage<T> {
   data: T[];
   meta: { nextCursor: string | null };
 }
+export type CaptureTokenStatus = Schemas['CaptureTokenStatusResponse']['data'];
+export type CreatedCaptureToken = Schemas['CreatedCaptureTokenResponse']['data'];

@@ -1,6 +1,14 @@
 // Auth, profile, sessions, import/export: /auth, /users/me, /imports and /exports.
 // The session lives in an HttpOnly cookie the browser sends on its own; JS never sees the token.
-import type { ImportReport, NotificationSettings, Preferences, Session, User } from '../types.ts';
+import type {
+  CaptureTokenStatus,
+  CreatedCaptureToken,
+  ImportReport,
+  NotificationSettings,
+  Preferences,
+  Session,
+  User,
+} from '../types.ts';
 import { download, request, requestData } from './http.ts';
 
 export function getMe(): Promise<User> {
@@ -89,4 +97,19 @@ export function exportApplicationsCsv(): Promise<void> {
 
 export function exportAccountJson(): Promise<void> {
   return download('/exports/account.json', {}, 'mission-control-export.json');
+}
+
+// --- Gmail capture (/capture/token): the token the Gmail script authenticates with ----------
+
+export function getCaptureToken(): Promise<CaptureTokenStatus> {
+  return requestData('/capture/token');
+}
+
+// Shown once; replaces (and so disconnects) any previous token.
+export function createCaptureToken(): Promise<CreatedCaptureToken> {
+  return requestData('/capture/token', { method: 'POST' });
+}
+
+export function revokeCaptureToken(): Promise<void> {
+  return request('/capture/token', { method: 'DELETE' });
 }

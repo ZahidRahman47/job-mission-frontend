@@ -20,6 +20,7 @@ import type { Application, ApplicationDetail, ApplicationStatus } from './types.
 export const keys = {
   me: ['me'] as const,
   sessions: ['sessions'] as const,
+  captureToken: ['capture-token'] as const,
   applications: ['applications'] as const,
   applicationList: (q: applications.ApplicationQuery) => ['applications', 'list', q] as const,
   application: (id: string) => ['applications', 'detail', id] as const,
@@ -55,12 +56,18 @@ const productData = [
 
 export const useMe = () => useQuery({ queryKey: keys.me, queryFn: account.getMe });
 
+export const useCaptureToken = () =>
+  useQuery({ queryKey: keys.captureToken, queryFn: account.getCaptureToken });
+
 export const useSessions = () =>
   useQuery({ queryKey: keys.sessions, queryFn: account.listSessions });
 
 export function useAccountMutation<TInput, TResult>(fn: (input: TInput) => Promise<TResult>) {
   const invalidate = useInvalidate();
-  return useMutation({ mutationFn: fn, onSuccess: () => invalidate(keys.me, keys.sessions) });
+  return useMutation({
+    mutationFn: fn,
+    onSuccess: () => invalidate(keys.me, keys.sessions, keys.captureToken),
+  });
 }
 
 // Ends the session. The login page then empties the cache (see LoginForm): clearing it here,
