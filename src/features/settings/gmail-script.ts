@@ -31,7 +31,7 @@ const SEARCH =
 const LABEL = 'Mission Control';
 const PAGE = 100; // threads per Gmail search page
 const MAX_THREADS = 500; // per run: far more than a month of job emails
-const BATCH = 10; // emails per request
+const BATCH = 5; // emails per request (each carries its HTML part)
 const OVERLAP_MS = 10 * 60 * 1000;
 
 /** Run once: installs the 5-minute trigger and does the first sync. */
@@ -44,6 +44,8 @@ function setup() {
     .forEach((t) => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('captureJobEmails').timeBased().everyMinutes(5).create();
   if (!GmailApp.getUserLabelByName(LABEL)) GmailApp.createLabel(LABEL);
+  // Start over: re-running setup resends the last lookbackDays (the API skips what it has).
+  PropertiesService.getScriptProperties().deleteProperty('lastSyncMs');
   captureJobEmails();
   console.log('Set up. Mission Control now checks your Gmail every 5 minutes.');
 }
@@ -107,7 +109,16 @@ function toPayload(m, thread, me) {
     subject: (m.getSubject() || '').slice(0, 1000),
     sentAt: m.getDate().toISOString(),
     text: (m.getPlainBody() || '').slice(0, 50000),
+    html: shrinkHtml(m.getBody() || '').slice(0, 150000),
   };
+}
+
+// Styles, scripts and comments make up most of an email's HTML and carry no text.
+function shrinkHtml(html) {
+  return html
+    .replace(/<!--[\\s\\S]*?-->/g, '')
+    .replace(/<(style|script|head)\\b[\\s\\S]*?<\\/\\1>/gi, '')
+    .replace(/\\s+/g, ' ');
 }
 
 // "A <a@x.com>, \\"B, Jr\\" <b@x.com>" -> ['A <a@x.com>', '"B, Jr" <b@x.com>']

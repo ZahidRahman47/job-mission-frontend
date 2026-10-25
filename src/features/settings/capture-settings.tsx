@@ -164,7 +164,7 @@ export function CaptureSettings() {
         title="Install it"
         description="Five minutes, once. Nothing to install on your computer."
       >
-        <ol className="m-0 flex flex-col gap-3 pl-5 text-sm">
+        <ol className="m-0 grid list-decimal gap-3 pl-5 text-sm">
           {STEPS.map((step, i) => (
             <li key={i}>{step}</li>
           ))}
@@ -175,7 +175,7 @@ export function CaptureSettings() {
         title="What it reads"
         description="Only job emails, matched by a Gmail search inside the script. Nothing else leaves your inbox."
       >
-        <ul className="m-0 flex flex-col gap-2 pl-5 text-sm">
+        <ul className="m-0 grid list-disc gap-2 pl-5 text-sm">
           <li>
             <b>Tracked now:</b> LinkedIn Easy Apply and Indeed Apply confirmations.
           </li>

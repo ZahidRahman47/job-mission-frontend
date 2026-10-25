@@ -4218,6 +4218,8 @@ export interface components {
                 sentAt: string;
                 /** @default  */
                 text: string;
+                /** @default  */
+                html: string;
             }[];
         };
         Readiness: {
@@ -4657,6 +4659,8 @@ export interface components {
             data: {
                 /** @description Emails not seen before. */
                 stored: number;
+                /** @description Sent again after no rule matched; processed again. */
+                requeued: number;
                 /** @description Already stored; ignored. */
                 duplicates: number;
             };
