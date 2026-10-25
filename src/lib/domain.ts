@@ -16,6 +16,9 @@ export const APPLICATION_STATUSES = [
 
 export const SOURCES = [
   'linkedin',
+  'indeed',
+  'rozee',
+  'mustakbil',
   'company_site',
   'referral',
   'job_board',
@@ -85,6 +88,9 @@ export const STATUS_LABEL: Record<ApplicationStatus, string> = {
 
 export const SOURCE_LABEL: Record<Source, string> = {
   linkedin: 'LinkedIn',
+  indeed: 'Indeed',
+  rozee: 'Rozee.pk',
+  mustakbil: 'Mustakbil',
   company_site: 'Company site',
   referral: 'Referral',
   job_board: 'Job board',
