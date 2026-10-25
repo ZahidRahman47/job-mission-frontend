@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens: "Instrument Light" (default) and "Night Ops" (dark), from the theme canvas.
+ * Rule 01: on light screens lime is a FILL with ink text on it, never text (1.2:1 contrast).
+ * Every component uses these semantic names, so a theme is just a different set of values.
+ */
+:root {
+  --bg: #f4f1ea;
+  --panel: #fbfaf6;
+  --line: #dcd8ce;
+  --text: #0e0f0c;
+  --muted: #5e5e57;
+  --accent: #c8f031;
+  --on-accent: #0e0f0c;
+  --accent-text: #4a6200;
+  --track: #e6e2d8;
+  --bar: #0e0f0c;
+  --bar-on: #0e0f0c;
+  --bar-off: #8f8c82;
+  --hero-bg: #c8f031;
+  --hero-fg: #0e0f0c;
+  --flag-bg: #0e0f0c;
+  --flag-fg: #c8f031;
+  --soft: #eaf5c7;
+  --soft-fg: #0e0f0c;
+  --strong-bg: #0e0f0c;
+  --strong-fg: #c8f031;
+  --danger: #a3261b;
+  --side-bg: #f4f1ea;
+  --side-text: #0e0f0c;
+  --side-muted: #5e5e57;
+  --side-line: #dcd8ce;
+  --side-active-bg: #0e0f0c;
+  --side-active-fg: #f4f1ea;
+  --overlay: rgb(14 15 12 / 0.45);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230e0f0c' stroke-width='1.6'/%3E%3C/svg%3E");
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0e0f0c;
+  --panel: #16171a;
+  --line: #2b2c2f;
+  --text: #f4f1ea;
+  --muted: #a3a39a;
+  --accent: #c8f031;
+  --on-accent: #0e0f0c;
+  --accent-text: #c8f031;
+  --track: #24252a;
+  --bar: #f4f1ea;
+  --bar-on: #c8f031;
+  --bar-off: #6b6b64;
+  --hero-bg: transparent;
+  --hero-fg: #c8f031;
+  --flag-bg: #c8f031;
+  --flag-fg: #0e0f0c;
+  --soft: rgb(200 240 49 / 0.14);
+  --soft-fg: #c8f031;
+  --strong-bg: #f4f1ea;
+  --strong-fg: #0e0f0c;
+  --danger: #ff8a7a;
+  --side-bg: #0e0f0c;
+  --side-text: #f4f1ea;
+  --side-muted: #a3a39a;
+  --side-line: #2b2c2f;
+  --side-active-bg: #c8f031;
+  --side-active-fg: #0e0f0c;
+  --overlay: rgb(0 0 0 / 0.6);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23f4f1ea' stroke-width='1.6'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-text: var(--accent-text);
+  --color-track: var(--track);
+  --color-bar: var(--bar);
+  --color-bar-on: var(--bar-on);
+  --color-bar-off: var(--bar-off);
+  --color-hero-bg: var(--hero-bg);
+  --color-hero-fg: var(--hero-fg);
+  --color-flag-bg: var(--flag-bg);
+  --color-flag-fg: var(--flag-fg);
+  --color-soft: var(--soft);
+  --color-soft-fg: var(--soft-fg);
+  --color-strong-bg: var(--strong-bg);
+  --color-strong-fg: var(--strong-fg);
+  --color-danger: var(--danger);
+  --color-side-bg: var(--side-bg);
+  --color-side-text: var(--side-text);
+  --color-side-muted: var(--side-muted);
+  --color-side-line: var(--side-line);
+  --color-side-active-bg: var(--side-active-bg);
+  --color-side-active-fg: var(--side-active-fg);
+  --color-overlay: var(--overlay);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: 'tnum' 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+  /* Typeahead inputs: hide Chrome's native datalist arrow; suggestions still appear as you type. */
+  input[list]::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+@layer utilities {
+  /* Display type: Archivo at 112% width (the "neo-industrial" voice). Headlines only. */
+  .display {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+  }
+  /* Small uppercase data labels. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
