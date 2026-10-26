@@ -96,8 +96,12 @@ export function Momentum({ series }: { series: Timeseries }) {
       </div>
       <div aria-hidden="true" className="flex gap-2">
         {series.buckets.map((b) => (
-          <span key={b.start} className="flex-1 text-center font-mono text-[11px] text-muted">
-            W{isoWeek(new Date(b.start))}
+          <span
+            key={b.start}
+            className="min-w-0 flex-1 text-center font-mono text-[11px] text-muted max-sm:even:invisible"
+          >
+            <span className="max-sm:hidden">W</span>
+            {isoWeek(new Date(b.start))}
           </span>
         ))}
       </div>

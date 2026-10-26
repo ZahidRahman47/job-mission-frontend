@@ -20,21 +20,21 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </p>
           <ul className="m-0 flex list-none flex-col gap-3 p-0 text-muted">
             <li>
-              <span className="font-mono text-xs text-accent">01</span> &nbsp;Log a job in under a
-              minute.
+              <span className="font-mono text-xs text-accent">01</span> &nbsp;LinkedIn and Indeed
+              applications, tracked from your Gmail.
             </li>
             <li>
-              <span className="font-mono text-xs text-accent">02</span> &nbsp;Never miss a
-              follow-up.
+              <span className="font-mono text-xs text-accent">02</span> &nbsp;A reminder to follow
+              up a week later.
             </li>
             <li>
               <span className="font-mono text-xs text-accent">03</span> &nbsp;See which channels
-              actually work.
+              actually get replies.
             </li>
           </ul>
         </div>
         <span className="font-mono text-xs text-muted">
-          YOUR DATA STAYS PRIVATE. EXPORT IT ANY TIME.
+          FREE · YOUR DATA STAYS PRIVATE · EXPORT IT ANY TIME
         </span>
       </aside>
       <main className="flex items-center justify-center px-6 py-12 sm:px-12">

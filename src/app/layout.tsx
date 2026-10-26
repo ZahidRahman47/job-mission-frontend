@@ -14,9 +14,23 @@ const archivo = Archivo({
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono-face', display: 'swap' });
 
+const DESCRIPTION =
+  'Free job-application tracker for Pakistan. LinkedIn and Indeed applications tracked straight from your Gmail, with a reminder to follow up.';
+
 export const metadata: Metadata = {
+  // Share previews (LinkedIn, WhatsApp, X) need absolute image URLs.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://job-mission-frontend.vercel.app',
+  ),
   title: { default: 'Mission Control', template: '%s · Mission Control' },
-  description: 'A calm instrument for an ambitious job search: capture, act, learn.',
+  description: DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    siteName: 'Mission Control',
+    title: 'Every job you apply to. Tracked for you.',
+    description: DESCRIPTION,
+  },
+  twitter: { card: 'summary_large_image' },
 };
 
 export const viewport: Viewport = {

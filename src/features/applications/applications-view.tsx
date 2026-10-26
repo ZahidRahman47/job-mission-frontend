@@ -1,6 +1,15 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, Columns3, Download, Plus, Search, X } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Columns3,
+  Download,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -81,6 +90,12 @@ export function ApplicationsView() {
     update({ sort: field, order });
   };
 
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilters =
+    (query.status?.length ?? 0) +
+    (query.source?.length ?? 0) +
+    (query.archived === 'exclude' ? 0 : 1);
+
   const filtered =
     Boolean(query.q) ||
     (query.status?.length ?? 0) > 0 ||
@@ -100,7 +115,7 @@ export function ApplicationsView() {
             <ButtonLink href="/board" variant="secondary">
               <Columns3 size={15} aria-hidden="true" /> Board
             </ButtonLink>
-            <ButtonLink href="/settings/data" variant="secondary">
+            <ButtonLink href="/settings/data" variant="secondary" className="max-sm:hidden">
               <Download size={15} aria-hidden="true" /> Export
             </ButtonLink>
             <Button
@@ -117,7 +132,7 @@ export function ApplicationsView() {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-3">
-          <label className="relative min-w-[240px] flex-1">
+          <label className="relative min-w-[180px] flex-1">
             <span className="sr-only">Search company or job title</span>
             <Search
               size={16}
@@ -134,7 +149,23 @@ export function ApplicationsView() {
               className="h-11 w-full border border-line bg-panel pr-3 pl-9 text-[15px] outline-none placeholder:text-muted focus:border-text"
             />
           </label>
-          <label className="w-48">
+          {/* Phones: source, archive and status filters fold behind one button. */}
+          <button
+            type="button"
+            aria-expanded={filtersOpen}
+            aria-controls="application-filters"
+            onClick={() => {
+              setFiltersOpen((open) => !open);
+            }}
+            className={cn(
+              'flex h-11 items-center gap-2 border px-3.5 text-[13px] font-semibold md:hidden',
+              activeFilters > 0 ? 'border-strong-bg bg-strong-bg text-strong-fg' : 'border-line',
+            )}
+          >
+            <SlidersHorizontal size={15} aria-hidden="true" />
+            Filters{activeFilters > 0 && ` · ${String(activeFilters)}`}
+          </button>
+          <label className={cn('w-48', !filtersOpen && 'max-md:hidden')}>
             <span className="sr-only">Source</span>
             <Select
               value={query.source?.[0] ?? ''}
@@ -150,7 +181,11 @@ export function ApplicationsView() {
               ))}
             </Select>
           </label>
-          <div role="group" aria-label="Archive" className="flex border border-line">
+          <div
+            role="group"
+            aria-label="Archive"
+            className={cn('flex border border-line', !filtersOpen && 'max-md:hidden')}
+          >
             {(['exclude', 'only', 'include'] as const).map((value) => (
               <button
                 key={value}
@@ -170,7 +205,12 @@ export function ApplicationsView() {
           </div>
         </div>
 
-        <div role="group" aria-label="Filter by status" className="flex flex-wrap gap-2">
+        <div
+          id="application-filters"
+          role="group"
+          aria-label="Filter by status"
+          className={cn('flex flex-wrap gap-2', !filtersOpen && 'max-md:hidden')}
+        >
           {APPLICATION_STATUSES.map((status) => {
             const on = query.status?.includes(status) ?? false;
             return (

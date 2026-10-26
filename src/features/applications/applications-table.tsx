@@ -65,80 +65,132 @@ export function ApplicationsTable({
 }) {
   const cell = dense ? 'px-5 py-3' : 'px-5 py-3.5';
   return (
-    <div className="overflow-x-auto">
-      <table
-        aria-busy={loading || undefined}
-        className={cn(
-          'w-full min-w-[760px] border-collapse text-sm transition-opacity',
-          loading && 'opacity-60',
-        )}
-      >
-        <thead>
-          <tr className="text-left">
-            {COLUMNS.map((col) => (
-              <th
-                key={col.label}
-                scope="col"
-                aria-sort={
-                  sorting && col.field && sorting.field === col.field
-                    ? sorting.order === 'asc'
-                      ? 'ascending'
-                      : 'descending'
-                    : undefined
-                }
-                className={cn('eyebrow border-b border-line px-5 py-3 font-medium', col.className)}
-              >
-                {sorting && col.field ? (
-                  <SortHeader label={col.label} field={col.field} sorting={sorting} />
-                ) : (
-                  col.label
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((app) => {
-            const follow = followUpLabel(app.nextFollowUpAt);
-            return (
-              <tr key={app.id} className="group border-b border-line last:border-b-0 hover:bg-bg">
-                <td className={cn(cell, 'font-semibold')}>
-                  <Link href={`/applications/${app.id}`} className="no-underline hover:underline">
-                    {app.companyName}
-                  </Link>
-                </td>
-                <td className={cell}>
-                  <Link href={`/applications/${app.id}`} tabIndex={-1} className="no-underline">
-                    {app.title}
-                  </Link>
-                  {app.archivedAt && <span className="eyebrow ml-2">Archived</span>}
-                </td>
-                <td className={cell}>
-                  <StatusPill status={app.status} />
-                </td>
-                <td className={cn(cell, 'font-mono text-[13px]')}>{shortDate(app.appliedAt)}</td>
-                <td
+    <>
+      <ApplicationCards rows={rows} loading={loading} />
+      <div className="hidden overflow-x-auto md:block">
+        <table
+          aria-busy={loading || undefined}
+          className={cn(
+            'w-full min-w-[760px] border-collapse text-sm transition-opacity',
+            loading && 'opacity-60',
+          )}
+        >
+          <thead>
+            <tr className="text-left">
+              {COLUMNS.map((col) => (
+                <th
+                  key={col.label}
+                  scope="col"
+                  aria-sort={
+                    sorting && col.field && sorting.field === col.field
+                      ? sorting.order === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : undefined
+                  }
                   className={cn(
-                    cell,
-                    'font-mono text-[13px]',
-                    (follow === 'OVERDUE' || follow === 'TODAY') && 'font-bold',
+                    'eyebrow border-b border-line px-5 py-3 font-medium',
+                    col.className,
                   )}
                 >
-                  {follow === 'OVERDUE' ? (
-                    <span className="bg-flag-bg px-1.5 py-0.5 text-flag-fg">OVERDUE</span>
+                  {sorting && col.field ? (
+                    <SortHeader label={col.label} field={col.field} sorting={sorting} />
                   ) : (
-                    follow
+                    col.label
                   )}
-                </td>
-                <td className={cn(cell, 'hidden text-muted xl:table-cell')}>
-                  {SOURCE_LABEL[app.source]}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((app) => {
+              const follow = followUpLabel(app.nextFollowUpAt);
+              return (
+                <tr key={app.id} className="group border-b border-line last:border-b-0 hover:bg-bg">
+                  <td className={cn(cell, 'font-semibold')}>
+                    <Link href={`/applications/${app.id}`} className="no-underline hover:underline">
+                      {app.companyName}
+                    </Link>
+                  </td>
+                  <td className={cell}>
+                    <Link href={`/applications/${app.id}`} tabIndex={-1} className="no-underline">
+                      {app.title}
+                    </Link>
+                    {app.archivedAt && <span className="eyebrow ml-2">Archived</span>}
+                  </td>
+                  <td className={cell}>
+                    <StatusPill status={app.status} />
+                  </td>
+                  <td className={cn(cell, 'font-mono text-[13px]')}>{shortDate(app.appliedAt)}</td>
+                  <td
+                    className={cn(
+                      cell,
+                      'font-mono text-[13px]',
+                      (follow === 'OVERDUE' || follow === 'TODAY') && 'font-bold',
+                    )}
+                  >
+                    {follow === 'OVERDUE' ? (
+                      <span className="bg-flag-bg px-1.5 py-0.5 text-flag-fg">OVERDUE</span>
+                    ) : (
+                      follow
+                    )}
+                  </td>
+                  <td className={cn(cell, 'hidden text-muted xl:table-cell')}>
+                    {SOURCE_LABEL[app.source]}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// Phones: a table would hide status and dates off-screen, so each application is a tappable card.
+function ApplicationCards({ rows, loading }: { rows: ApplicationListItem[]; loading: boolean }) {
+  return (
+    <ul
+      aria-busy={loading || undefined}
+      className={cn('m-0 list-none p-0 transition-opacity md:hidden', loading && 'opacity-60')}
+    >
+      {rows.map((app) => {
+        const follow = followUpLabel(app.nextFollowUpAt);
+        return (
+          <li key={app.id} className="border-b border-line last:border-b-0">
+            <Link
+              href={`/applications/${app.id}`}
+              className="flex flex-col gap-1.5 px-4 py-3.5 no-underline active:bg-track"
+            >
+              <span className="flex items-start justify-between gap-3">
+                <span className="min-w-0 font-semibold">{app.companyName}</span>
+                <StatusPill status={app.status} />
+              </span>
+              <span className="text-sm">
+                {app.title}
+                {app.archivedAt && <span className="eyebrow ml-2">Archived</span>}
+              </span>
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[12px] text-muted">
+                <span>
+                  {app.appliedAt ? `Applied ${shortDate(app.appliedAt)}` : 'Not applied yet'}
+                </span>
+                {follow === 'OVERDUE' ? (
+                  <span className="bg-flag-bg px-1.5 py-0.5 font-bold text-flag-fg">
+                    FOLLOW-UP OVERDUE
+                  </span>
+                ) : follow !== '—' ? (
+                  <span className={cn(follow === 'TODAY' && 'font-bold text-text')}>
+                    Follow up {follow}
+                  </span>
+                ) : null}
+                <span>{SOURCE_LABEL[app.source]}</span>
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
