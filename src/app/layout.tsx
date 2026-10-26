@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Inter, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { Providers } from './providers';
 
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
