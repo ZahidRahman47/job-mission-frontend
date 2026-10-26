@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Copy, MailCheck } from 'lucide-react';
+import { Check, Copy, MailCheck, Monitor } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -77,6 +77,15 @@ export function CaptureSettings() {
         title="Gmail capture"
         description="Applications you make on LinkedIn and Indeed show up here on their own, with a reminder to follow up a week later."
       >
+        {/* script.google.com isn't usable on a phone: say so before anyone gets stuck. */}
+        <div className="flex gap-3 border border-line bg-bg px-4 py-3 md:hidden">
+          <Monitor size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
+          <p className="m-0 text-sm">
+            <b>Do this step on a computer.</b> Google’s script editor doesn’t work on phones. Log in
+            on your laptop, open Settings → Gmail capture, and it takes five minutes. After that,
+            everything updates on your phone too.
+          </p>
+        </div>
         {!status.data ? (
           <Skeleton className="h-16" />
         ) : (
@@ -87,7 +96,13 @@ export function CaptureSettings() {
               className={active ? 'text-accent-text' : 'text-muted'}
             />
             <div className="flex flex-col gap-0.5">
-              <span className="font-semibold">{active ? 'Connected' : 'Not connected'}</span>
+              <span className="font-semibold">
+                {!active
+                  ? 'Not connected'
+                  : status.data.lastUsedAt
+                    ? 'Connected'
+                    : 'Script created'}
+              </span>
               <span className="text-sm text-muted">
                 {!active
                   ? 'Create a script below and install it in your Gmail.'

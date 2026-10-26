@@ -265,17 +265,22 @@ export function ApplicationsView() {
             />
           ) : (
             <EmptyState
-              title="Your pipeline starts here."
-              description="Log an application in under a minute, or import your spreadsheet."
+              title="Your pipeline fills itself."
+              description="Connect Gmail once, and your LinkedIn and Indeed applications from the last 30 days appear here, with every new one after that."
               action={
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    openNewApplication();
-                  }}
-                >
-                  New application
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <ButtonLink href="/settings/capture" variant="primary">
+                    Connect Gmail
+                  </ButtonLink>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      openNewApplication();
+                    }}
+                  >
+                    Add one by hand
+                  </Button>
+                </div>
               }
             />
           )

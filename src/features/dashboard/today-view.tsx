@@ -20,6 +20,7 @@ import {
   useUpcoming,
 } from '@/lib/queries';
 import { Funnel, isoWeek, Momentum } from './charts';
+import { GettingStarted, useOnboarding } from './getting-started';
 
 export function TodayView() {
   const { openNewApplication } = useShell();
@@ -35,11 +36,65 @@ export function TodayView() {
     limit: 6,
   });
   const labels = useApplicationLabels();
+  const onboarding = useOnboarding();
 
   const now = new Date();
   const dueToday =
     (upcoming.data?.overdueReminders.length ?? 0) + (upcoming.data?.todayReminders.length ?? 0);
   const dateLine = `${now.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()} · WEEK ${String(isoWeek(now))}`;
+
+  // Before the first application exists, empty charts would only say "nothing here": show the
+  // setup path instead. The full dashboard appears as soon as there's something to show.
+  // Until we know whether this is a brand-new account, show neither layout: no flash of empty
+  // charts before the welcome screen.
+  if (onboarding.loading) {
+    return (
+      <div aria-busy="true" className="flex flex-col gap-6">
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-14 w-[min(560px,85%)]" />
+        <Skeleton className="h-64" />
+        <Skeleton className="h-28" />
+      </div>
+    );
+  }
+
+  if (onboarding.isNew) {
+    return (
+      <>
+        <header className="flex flex-col gap-2.5">
+          <span className="eyebrow">{dateLine}</span>
+          <h1 className="display m-0 text-[clamp(34px,5vw,56px)] leading-[1.02] font-extrabold">
+            Welcome{onboarding.firstName ? `, ${onboarding.firstName}` : ''}.
+          </h1>
+          <p className="m-0 max-w-2xl text-lg text-muted">
+            Three quick steps, and Mission Control starts tracking your job search for you.
+          </p>
+        </header>
+        <GettingStarted onboarding={onboarding} />
+        <Panel bodyClassName="flex flex-wrap items-center justify-between gap-5 px-5 py-6 sm:px-6">
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="font-semibold">Already applied somewhere else?</span>
+            <span className="text-sm text-muted">
+              Add any application by hand, or bring your spreadsheet: company and role are enough.
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href="/settings/data" variant="secondary">
+              <Upload size={15} aria-hidden="true" /> Import spreadsheet
+            </ButtonLink>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                openNewApplication();
+              }}
+            >
+              <Plus size={16} aria-hidden="true" strokeWidth={2.4} /> Add an application
+            </Button>
+          </div>
+        </Panel>
+      </>
+    );
+  }
 
   return (
     <>
@@ -75,6 +130,8 @@ export function TodayView() {
           </Button>
         </div>
       </header>
+
+      <GettingStarted onboarding={onboarding} />
 
       <section
         aria-label="Last 90 days"
