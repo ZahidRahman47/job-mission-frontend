@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Inter, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
@@ -56,6 +57,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Providers>{children}</Providers>
+        {/* Anonymous, cookieless page-view counts (Vercel Web Analytics); see /privacy. */}
+        <Analytics />
       </body>
     </html>
   );

@@ -27,6 +27,11 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           <b>Sign-in sessions:</b> the device and browser, and only part of your IP address, so you
           can see and end sessions in Settings.
         </li>
+        <li>
+          <b>Visit counts:</b> anonymous page-view numbers (which pages are visited, and from which
+          site visitors arrive) through Vercel Web Analytics. It uses no cookies and nothing that
+          identifies you.
+        </li>
       </ul>
     ),
   },
@@ -62,7 +67,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
       <ul>
         <li>No ads, and no selling or sharing your data with anyone.</li>
         <li>No sending email on your behalf, and no changing or deleting your Gmail.</li>
-        <li>No tracking you across other websites.</li>
+        <li>No advertising cookies, and no tracking you across other websites.</li>
       </ul>
     ),
   },
