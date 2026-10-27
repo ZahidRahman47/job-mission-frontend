@@ -2364,6 +2364,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reminders/counts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * How many reminders each view holds (overdue, today, upcoming, completed)
+         * @description One request for the navigation badge and the view tabs; uses the same rules as the lists.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Counts per view. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReminderCountsResponse"];
+                    };
+                };
+                /** @description `UNAUTHENTICATED` or `SESSION_EXPIRED`: log in first. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reminders": {
         parameters: {
             query?: never;
@@ -4355,6 +4403,11 @@ export interface components {
             completedAt: string | null;
             /** Format: date-time */
             createdAt: string;
+            /** @description The linked application, on list and dashboard rows (absent on single-reminder responses). */
+            application?: {
+                companyName: string;
+                title: string;
+            } | null;
         };
         Interview: {
             /** @example 6720f1c2a1b2c3d4e5f60718 */
@@ -4545,6 +4598,14 @@ export interface components {
         };
         ActivityResponse: {
             data: components["schemas"]["Activity"];
+        };
+        ReminderCountsResponse: {
+            data: {
+                overdue: number;
+                today: number;
+                upcoming: number;
+                completed: number;
+            };
         };
         ReminderListResponse: {
             data: components["schemas"]["Reminder"][];

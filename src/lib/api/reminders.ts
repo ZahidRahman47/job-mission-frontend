@@ -3,7 +3,6 @@ import type { Page, Reminder } from '../types.ts';
 import { request, requestData } from './http.ts';
 
 export type ReminderView = 'overdue' | 'today' | 'upcoming' | 'completed';
-const VIEWS: readonly ReminderView[] = ['overdue', 'today', 'upcoming', 'completed'];
 
 export interface NewReminder {
   title: string;
@@ -22,14 +21,9 @@ export function listReminders(
 }
 
 // Tab badges: one tiny page per view, read from meta.total.
-export async function reminderCounts(): Promise<Record<ReminderView, number>> {
-  const totals = await Promise.all(
-    VIEWS.map((view) => listReminders(view, { limit: 1 }).then((page) => page.meta.total)),
-  );
-  return Object.fromEntries(VIEWS.map((view, i) => [view, totals[i] ?? 0])) as Record<
-    ReminderView,
-    number
-  >;
+// One request for the badge and the view tabs (the API counts with the same rules as the lists).
+export function reminderCounts(): Promise<Record<ReminderView, number>> {
+  return requestData('/reminders/counts');
 }
 
 export function createReminder(input: NewReminder): Promise<Reminder> {

@@ -46,7 +46,7 @@ export function NewReminderDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const create = useCreateReminder();
-  const labels = useApplicationLabels();
+  const labels = useApplicationLabels(open);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const form = useForm<Values>({
@@ -141,7 +141,6 @@ export function RemindersView() {
     : 'overdue';
   const list = useReminders(view);
   const counts = useReminderCounts();
-  const labels = useApplicationLabels();
   const [creating, setCreating] = useState(false);
   const current = VIEWS.find((v) => v.key === view) ?? VIEWS[0];
 
@@ -228,7 +227,12 @@ export function RemindersView() {
                 showDelete
                 application={
                   r.applicationId
-                    ? { id: r.applicationId, label: labels.get(r.applicationId) ?? 'Application' }
+                    ? {
+                        id: r.applicationId,
+                        label: r.application
+                          ? `${r.application.companyName} · ${r.application.title}`
+                          : 'Application',
+                      }
                     : undefined
                 }
               />

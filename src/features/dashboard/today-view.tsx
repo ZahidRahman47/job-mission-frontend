@@ -12,13 +12,7 @@ import { defaultRange } from '@/lib/api/analytics';
 import { ACTIVE_STATUSES, INTERVIEW_TYPE_LABEL } from '@/lib/domain';
 import { errorMessage } from '@/lib/api/errors';
 import { percent, time } from '@/lib/format';
-import {
-  useApplicationLabels,
-  useApplications,
-  useSummary,
-  useTimeseries,
-  useUpcoming,
-} from '@/lib/queries';
+import { useApplications, useSummary, useTimeseries, useUpcoming } from '@/lib/queries';
 import { Funnel, isoWeek, Momentum } from './charts';
 import { GettingStarted, useOnboarding } from './getting-started';
 
@@ -35,7 +29,6 @@ export function TodayView() {
     order: 'asc',
     limit: 6,
   });
-  const labels = useApplicationLabels();
   const onboarding = useOnboarding();
 
   const now = new Date();
@@ -206,7 +199,12 @@ export function TodayView() {
                   reminder={r}
                   application={
                     r.applicationId
-                      ? { id: r.applicationId, label: labels.get(r.applicationId) ?? '' }
+                      ? {
+                          id: r.applicationId,
+                          label: r.application
+                            ? `${r.application.companyName} · ${r.application.title}`
+                            : '',
+                        }
                       : undefined
                   }
                 />

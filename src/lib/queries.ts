@@ -175,11 +175,15 @@ async function fetchApplicationLabels(): Promise<[string, string][]> {
   }
 }
 
-export function useApplicationLabels(): Map<string, string> {
+// Every application's "Company · Role", for "link to an application" dropdowns. Fetches the whole
+// list, so pass `enabled` to load it only while such a form is open. List rows don't need it:
+// the API labels reminders itself (`reminder.application`).
+export function useApplicationLabels(enabled = true): Map<string, string> {
   const all = useQuery({
     queryKey: [...keys.applications, 'labels'],
     queryFn: fetchApplicationLabels,
     staleTime: 60_000,
+    enabled,
   });
   return new Map(all.data ?? []);
 }
